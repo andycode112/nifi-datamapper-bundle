@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/datamapper/datamapper-engine.iml" filepath="$PROJECT_DIR$/datamapper/datamapper-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi-datamapper-bundle.iml" filepath="$PROJECT_DIR$/nifi-datamapper-bundle.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi-datamapper-nar/nifi-datamapper-nar.iml" filepath="$PROJECT_DIR$/nifi-datamapper-nar/nifi-datamapper-nar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nifi-datamapper-processors/nifi-datamapper-processors.iml" filepath="$PROJECT_DIR$/nifi-datamapper-processors/nifi-datamapper-processors.iml" />
+    </modules>
+  </component>
+</project>
