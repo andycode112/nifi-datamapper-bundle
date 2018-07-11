@@ -275,71 +275,48 @@ public class DataMapper extends AbstractProcessor {
      * Retrieve property values and insert into a map
      *
      * @param propertiesNamesList Required properties
-     * @param synCtx              Message context
+     * @param context              Message context
      * @return Map filed with property name and the value
      */
-    private Map<String, Map<String, Object>> getPropertiesMap(List<String> propertiesNamesList, ProcessContext synCtx) {
+    private Map<String, Map<String, Object>> getPropertiesMap(List<String> propertiesNamesList, ProcessContext context) {
         Map<String, Map<String, Object>> propertiesMap = new HashMap<>();
-//        String[] contextAndName;
-//        Object value;
-//        org.apache.axis2.context.MessageContext axis2MsgCtx = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
-//        HashMap functionProperties = new HashMap();
-//        Stack<TemplateContext> templeteContextStack = ((Stack) synCtx
-//                .getProperty(SynapseConstants.SYNAPSE__FUNCTION__STACK));
-//        if (templeteContextStack != null && !templeteContextStack.isEmpty()) {
-//            TemplateContext templateContext = templeteContextStack.peek();
-//            functionProperties.putAll(templateContext.getMappedValues());
-//        }
-//        for (String propertyName : propertiesNamesList) {
-//            contextAndName = propertyName.split("\\['|'\\]");
-//            switch (contextAndName[INDEX_OF_CONTEXT].toUpperCase()) {
-//                case DEFAULT_CONTEXT:
-//                case SYNAPSE_CONTEXT:
-//                    value = synCtx.getProperty(contextAndName[INDEX_OF_NAME]);
-//                    break;
-//                case TRANSPORT_CONTEXT:
-//                    value = ((Map) axis2MsgCtx.getProperty(TRANSPORT_HEADERS)).get(contextAndName[INDEX_OF_NAME]);
-//                    break;
-//                case AXIS2_CONTEXT:
-//                    value = axis2MsgCtx.getProperty(contextAndName[INDEX_OF_NAME]);
-//                    break;
-//                case AXIS2_CLIENT_CONTEXT:
-//                    value = axis2MsgCtx.getOptions().getProperty(contextAndName[INDEX_OF_NAME]);
-//                    break;
-//                case OPERATIONS_CONTEXT:
-//                    value = axis2MsgCtx.getOperationContext().getProperty(contextAndName[INDEX_OF_NAME]);
-//                    break;
-//                case FUNCTION_CONTEXT:
-//                    value = functionProperties.get(contextAndName[INDEX_OF_NAME]);
-//                    break;
-//                default:
-//                    log.warn(contextAndName[INDEX_OF_CONTEXT] + " scope is not found. Setting it to an empty value.");
-//                    value = EMPTY_STRING;
-//            }
-//            if (value == null) {
-//                log.warn(propertyName + "not found. Setting it to an empty value.");
-//                value = EMPTY_STRING;
-//            }
-//            insertToMap(propertiesMap, contextAndName, value);
-//        }
+
+        String[] contextAndName;
+        Object value;
+        for (String propertyName : propertiesNamesList) {
+            contextAndName = propertyName.split("\\['|'\\]");
+            switch (contextAndName[0].toUpperCase()) {
+                case "DEFAULT":
+                    value = context.getProperty(contextAndName[1]).evaluateAttributeExpressions().getValue();
+                    break;
+                default:
+                    getLogger().warn(contextAndName[0] + " scope is not found. Setting it to an empty value.");
+                    value = "";
+            }
+            if (value == null) {
+                getLogger().warn(propertyName + "not found. Setting it to an empty value.");
+                value = "";
+            }
+            insertToMap(propertiesMap, contextAndName, value);
+        }
 
         return propertiesMap;
     }
 
-//    /**
-//     * Insert a given value to the properties map
-//     *
-//     * @param propertiesMap  Reference to the properties map
-//     * @param contextAndName Context and the name of the property
-//     * @param value          Current value of the property
-//     */
-//    private void insertToMap(Map<String, Map<String, Object>> propertiesMap, String[] contextAndName, Object value) {
-//        Map<String, Object> insideMap = propertiesMap.get(contextAndName[INDEX_OF_CONTEXT]);
-//        if (insideMap == null) {
-//            insideMap = new HashMap();
-//            propertiesMap.put(contextAndName[INDEX_OF_CONTEXT], insideMap);
-//        }
-//        insideMap.put(contextAndName[INDEX_OF_NAME], value);
-//    }
+    /**
+     * Insert a given value to the properties map
+     *
+     * @param propertiesMap  Reference to the properties map
+     * @param contextAndName Context and the name of the property
+     * @param value          Current value of the property
+     */
+    private void insertToMap(Map<String, Map<String, Object>> propertiesMap, String[] contextAndName, Object value) {
+        Map<String, Object> insideMap = propertiesMap.get(contextAndName[0]);
+        if (insideMap == null) {
+            insideMap = new HashMap();
+            propertiesMap.put(contextAndName[0], insideMap);
+        }
+        insideMap.put(contextAndName[1], value);
+    }
 
 }
