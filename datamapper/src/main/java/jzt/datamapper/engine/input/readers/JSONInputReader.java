@@ -58,7 +58,7 @@ public class JSONInputReader implements InputReader {
      * @throws IOException
      */
     private String readFromInputStream(InputStream inputStream) throws IOException {
-        InputStreamReader isr = new InputStreamReader((inputStream));
+        InputStreamReader isr = new InputStreamReader((inputStream),"UTF-8");
         BufferedReader br = new BufferedReader(isr);
 
         StringBuilder out = new StringBuilder("");
